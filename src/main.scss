@@ -1,0 +1,18 @@
+// * {
+//   @apply text-gray-700;
+// }
+
+.van-button__content,
+.van-button__text,
+.van-button__icon {
+  @apply text-[#fff];
+}
+
+.list {
+  @apply bg-white relative rounded-lg shadow-md text-sm gap-2 flex flex-col p-4;
+}
+
+:deep(.van-popup--center) {
+  @apply w-40;
+  width: 200px;
+}
