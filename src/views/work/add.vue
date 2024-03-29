@@ -56,6 +56,10 @@ const onSubmit = async () => {
     endTime: endTime.value.join(":"),
   };
 
+  if (!data.contact) {
+    delete data.contact;
+  }
+
   await addWork(data);
   showNotify({ type: "success", message: "新增成功" });
   getWorkList();
@@ -213,6 +217,7 @@ onMounted(async () => {
             cancel-button-text="取消"
             title="選擇結束時間"
             :formatter="formatter"
+            :filter="filter"
             @confirm="onConfirmEndTime"
           />
         </van-popup>

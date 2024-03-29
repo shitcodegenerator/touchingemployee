@@ -5,13 +5,14 @@ const { currentTime } = useCurrentTime();
 import dayjs from "dayjs";
 import { clockin } from "../request/apis/index";
 import { showNotify } from "vant";
+import { convertToUtc } from "../utils/timeFormat";
 
 const emit = defineEmits(["success"]);
 
 const startClockIn = async () => {
   const currentTime = dayjs().format("YYYY-MM-DD HH:mm:ss");
   await clockin({
-    start: currentTime,
+    start: convertToUtc(currentTime),
     end: "",
   });
 
@@ -21,7 +22,6 @@ const startClockIn = async () => {
     iconSize: "60px",
     className: "toast",
     closeOnClick: true,
-    duration: 0,
   });
   emit("success");
 };
@@ -29,7 +29,7 @@ const endClockIn = async () => {
   const currentTime = dayjs().format("YYYY-MM-DD HH:mm:ss");
   await clockin({
     start: "",
-    end: currentTime,
+    end: convertToUtc(currentTime),
   });
 
   showSuccessToast({
