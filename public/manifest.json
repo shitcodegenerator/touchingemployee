@@ -17,13 +17,12 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
-    },
+    }
   ],
-  "id": "/?source=pwa",
-  "start_url": "/?source=pwa",
-  "background_color": "#ffffff",
+  "start_url": "index.html",
+  "background_color": "#2488c7",
   "display": "standalone",
   "scope": "/",
-  "theme_color": "#ffffff",
+  "theme_color": "#2488c7",
   "description": "踏取打卡系統"
 }

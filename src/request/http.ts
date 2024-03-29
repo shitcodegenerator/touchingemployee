@@ -57,14 +57,15 @@ const setLoading = (status: boolean) => {
 
 
 
-let baseUrl = 'https://touching-employee-backend.vercel.app/'
+let baseUrl = 'https://touching-employee-backend.vercel.app/api'
 
-const baseURL = location.host.includes('localhost') ? '/proxyApi' : baseUrl
+// const baseURL = location.host.includes('localhost') ? '/proxyApi' : baseUrl
+// const baseURL = location.host.includes('localhost') ? '/proxyApi' : baseUrl
 
 /** 創建axios實例 */
 const instance = axios.create({
   timeout: 30000,
-  baseURL,
+  baseURL: baseUrl,
   headers: {
     'Content-Type': 'application/json'
   }
