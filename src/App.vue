@@ -2,12 +2,14 @@
 import Loading from "./components/Loading.vue";
 import Navbar from "./components/Navbar.vue";
 import usePage from "./store/page";
+import { useRoute } from "vue-router";
 
 const page = usePage();
+const route = useRoute();
 </script>
 
 <template>
-  <Navbar />
+  <Navbar v-if="route.name !== 'login'" />
   <Loading v-if="page.loading" />
   <router-view></router-view>
 </template>

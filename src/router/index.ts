@@ -11,6 +11,11 @@ import { useUserStore } from '../store/user';
 
 const routes: Array<RouteRecordRaw> = [
   {
+    name: 'login',
+    path: '/login',
+    component: () => import('@/views/login.vue'),
+  },
+  {
     path: '/',
     component: () => import('@/layout/default.vue'),
     children: [
