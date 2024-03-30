@@ -6,7 +6,7 @@ import mkcert from 'vite-plugin-mkcert'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [mkcert(),vue(),
+  plugins: [vue(),
     // VitePWA({
     //   registerType: 'autoUpdate',
     //   includeAssets: ['favicon.svg', 'robots.txt', 'apple-touch-icon.png'],
@@ -40,14 +40,14 @@ export default defineConfig({
       '@': resolve(__dirname, 'src')
     }
   },
-  server: {
-    proxy: {
-      '/proxyApi': {
-        target: 'http://localhost:3006/api/',
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace('/proxyApi', '')
-      }
-    }
-  },
+  // server: {
+  //   proxy: {
+  //     '/proxyApi': {
+  //       target: 'http://localhost:3006/api/',
+  //       changeOrigin: true,
+  //       secure: false,
+  //       rewrite: (path) => path.replace('/proxyApi', '')
+  //     }
+  //   }
+  // },
 })

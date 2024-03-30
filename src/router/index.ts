@@ -1,6 +1,6 @@
 import {
   createRouter,
-  createWebHistory,
+  createWebHashHistory,
   RouteLocationNormalized,
   RouteRecordRaw,
   NavigationGuardNext
@@ -59,7 +59,7 @@ const routes: Array<RouteRecordRaw> = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes,
   scrollBehavior(to, from, savedPosition) {
     return { top: 0, behavior: 'smooth' }
