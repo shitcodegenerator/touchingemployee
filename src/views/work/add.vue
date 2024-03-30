@@ -190,7 +190,9 @@ onMounted(async () => {
           @click="showStartTimePicker = true"
           :rules="[
             {
-              required: true,
+              validator: () => {
+                return !!startTime;
+              },
               message: '請選擇開始時間',
             },
           ]"
@@ -218,7 +220,9 @@ onMounted(async () => {
           @click="showEndTimePicker = true"
           :rules="[
             {
-              required: true,
+              validator: () => {
+                return !!endTime;
+              },
               message: '請選擇結束時間',
             },
           ]"
