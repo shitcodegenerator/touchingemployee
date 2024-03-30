@@ -17,11 +17,12 @@ const startClockIn = async () => {
   });
 
   showSuccessToast({
-    message: "上班打卡成功！\n一起努力加油加油！",
+    message: "上班打卡\n加油加油！",
     icon: "fire",
-    iconSize: "60px",
+    iconSize: "80px",
     className: "toast",
     closeOnClick: true,
+    duration: 1500,
   });
   emit("success");
 };
@@ -33,11 +34,12 @@ const endClockIn = async () => {
   });
 
   showSuccessToast({
-    message: "下班打卡成功！\n忙碌的一天，辛苦了！",
+    message: "下班打卡\n忙了一天\n辛苦了！",
     icon: "smile",
-    iconSize: "60px",
+    iconSize: "80px",
     className: "toast",
     closeOnClick: true,
+    duration: 1500,
   });
   emit("success");
 };

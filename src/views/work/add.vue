@@ -146,7 +146,7 @@ onMounted(async () => {
 
 <template>
   <div class="flex flex-col gap-4">
-    <van-form @submit="onSubmit">
+    <van-form @submit="onSubmit" validate-trigger="onChange">
       <van-cell-group class="mb-4">
         <van-popup v-model:show="showWorkplacePicker" round position="bottom">
           <van-picker
@@ -188,6 +188,12 @@ onMounted(async () => {
           input-align="right"
           :placeholder="getTime(startTime)"
           @click="showStartTimePicker = true"
+          :rules="[
+            {
+              required: true,
+              message: '請選擇開始時間',
+            },
+          ]"
         />
         <van-popup v-model:show="showStartTimePicker" round position="bottom">
           <van-time-picker
@@ -210,6 +216,12 @@ onMounted(async () => {
           :placeholder="getTime(endTime)"
           :filter="filter"
           @click="showEndTimePicker = true"
+          :rules="[
+            {
+              required: true,
+              message: '請選擇結束時間',
+            },
+          ]"
         />
         <van-popup v-model:show="showEndTimePicker" round position="bottom">
           <van-time-picker
@@ -236,10 +248,10 @@ onMounted(async () => {
           @input="clearContact"
           class="flex items-center"
           label="對象"
-          placeholder="如無交涉對象，請留白"
+          placeholder="無交涉對象請留白"
           required
         >
-          <template #button>
+          <template #prefix>
             <van-button size="small" @click="showContact" type="primary"
               >選擇聯絡人</van-button
             >
@@ -280,7 +292,13 @@ onMounted(async () => {
           type="textarea"
           autosize
           maxlength="200"
-          placeholder="請輸入工作內容，字數上限200字"
+          placeholder="工作內容，上限200字"
+          :rules="[
+            {
+              required: true,
+              message: '請輸入工作內容',
+            },
+          ]"
           show-word-limit
         />
       </van-cell-group>
@@ -290,7 +308,7 @@ onMounted(async () => {
         size="large"
         icon="plus"
         class="mt-10"
-        @click="onSubmit"
+        native-type="submit"
         >新增日報表</van-button
       >
     </van-form>

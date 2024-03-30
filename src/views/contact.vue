@@ -17,6 +17,7 @@ const fornData = reactive({
 const onSubmit = async () => {
   await addContact(fornData);
   showNotify({ type: "success", message: "新增成功" });
+  clearData();
   getList();
   //   getContact();
   // 在這裡發送API請求到後端
@@ -29,6 +30,15 @@ const getList = async () => {
   list.value = data.data;
 };
 
+const clearData = () => {
+  fornData.name = "";
+  fornData.title = "";
+  fornData.mobile = "";
+  fornData.line = "";
+  fornData.note = "";
+  fornData.workplace = "";
+};
+
 onMounted(() => {
   getList();
 });
@@ -39,11 +49,13 @@ const onConfirmWorkplace = (value) => {
   fornData.workplace = value.selectedValues[0];
   showWorkplacePicker.value = false;
 };
+
+const formRef = ref();
 </script>
 
 <template>
   <div class="flex flex-col gap-4">
-    <van-form @submit="onSubmit">
+    <van-form @submit="onSubmit" validate-trigger="onChange">
       <van-cell-group class="mb-4">
         <van-popup v-model:show="showWorkplacePicker" round position="bottom">
           <van-picker
@@ -71,6 +83,7 @@ const onConfirmWorkplace = (value) => {
           input-align="right"
           v-model="fornData.name"
           label="姓名"
+          :rules="[{ required: true, message: '請至少填寫姓名' }]"
           required
         />
         <van-field
@@ -105,8 +118,8 @@ const onConfirmWorkplace = (value) => {
         size="large"
         icon="plus"
         class="mt-10"
-        @click="onSubmit"
-        >新增日報表</van-button
+        native-type="submit"
+        >新增關係人</van-button
       >
     </van-form>
 
