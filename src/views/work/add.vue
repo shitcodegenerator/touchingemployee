@@ -251,7 +251,7 @@ onMounted(async () => {
           placeholder="無交涉對象請留白"
           required
         >
-          <template #prefix>
+          <template #button>
             <van-button size="small" @click="showContact" type="primary"
               >選擇聯絡人</van-button
             >
