@@ -49,8 +49,6 @@ const onConfirmWorkplace = (value) => {
   fornData.workplace = value.selectedValues[0];
   showWorkplacePicker.value = false;
 };
-
-const formRef = ref();
 </script>
 
 <template>
