@@ -43,7 +43,8 @@ export default defineConfig({
   server: {
     proxy: {
       '/proxyApi': {
-        target: 'https://touching-employee-backend.vercel.app/api/',
+        // target: 'https://touching-employee-backend.vercel.app/api/',
+        target: 'http://localhost:3006/api/',
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace('/proxyApi', '')

@@ -1,36 +1,14 @@
 <script lang="ts" setup>
 import Clock from "@/components/Clock.vue";
 import { onMounted } from "vue";
-import axios from "axios";
+// import axios from "axios";
 import { getClockinList } from "@/request/apis/index";
 import { ref } from "vue";
 import dayjs from "dayjs";
 
-import { useUserStore } from "../../store/user";
+// import { useUserStore } from "../../store/user";
 
-const user = useUserStore();
-
-const getGps = () => {
-  if ("geolocation" in navigator) {
-    navigator.geolocation.getCurrentPosition(
-      function (position) {
-        console.log("Latitude is :", position.coords.latitude);
-        console.log("Longitude is :", position.coords.longitude);
-        getPosition(position.coords.latitude, position.coords.longitude);
-      },
-      function (error) {
-        console.error("Error Code = " + error.code + " - " + error.message);
-      },
-      {
-        enableHighAccuracy: true, // 是否要求高精度的位置資訊
-        timeout: 5000, // 等待位置資訊的最長時間
-        maximumAge: 0, // 定位資訊的有效期
-      }
-    );
-  } else {
-    /* 地理位置服務不可用 */
-  }
-};
+// const user = useUserStore();
 
 const list = ref([
   {
@@ -46,16 +24,15 @@ const getList = async () => {
 };
 
 onMounted(() => {
-  //   getGps();
   getList();
   console.log;
 });
 </script>
 <template>
-  <div class="mb-4 rounded">
+  <!-- <div class="mb-4 rounded">
     Hello, <span>{{ user.data.name }}</span>
-  </div>
-  <Clock @success="getList" />
+  </div> -->
+  <Clock @success="getList" :list="list" />
   <van-divider
     color
     dashed
@@ -69,7 +46,8 @@ onMounted(() => {
     <div
       v-for="i in list"
       :key="i._id"
-      class="bg-white rounded flex flex-col p-4"
+      class="bg-white rounded flex flex-col border-l-4 p-4"
+      :class="[{ 'border-main': i.start }, { 'border-green-500': i.end }]"
     >
       <p :class="{ 'text-main': i.start, 'text-green-500': i.end }">
         <span class="font-bold">

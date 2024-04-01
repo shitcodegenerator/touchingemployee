@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { login } from "@/request/apis/index";
 import { useUserStore } from "../store/user";
 import { useRouter } from "vue-router";
@@ -10,6 +10,32 @@ const username = ref("");
 const password = ref("");
 const user = useUserStore();
 const router = useRouter();
+
+const getGps = () => {
+  if ("geolocation" in navigator) {
+    navigator.geolocation.getCurrentPosition(
+      async function (position) {
+        isLoginDisabled.value = false;
+      },
+      function (error) {
+        isLoginDisabled.value = true;
+        showNotify({
+          type: "danger",
+          message: "請啟用GPS再重新整理網頁登入＿",
+        });
+      },
+      {
+        enableHighAccuracy: true, // 是否要求高精度的位置資訊
+        timeout: 5000, // 等待位置資訊的最長時間
+        maximumAge: 0, // 定位資訊的有效期
+      }
+    );
+  } else {
+    /* 地理位置服務不可用 */
+    isLoginDisabled.value = true;
+    showNotify({ type: "danger", message: "請啟用GPS再重新整理網頁登入" });
+  }
+};
 
 const onSubmit = async () => {
   const { data } = await login({
@@ -22,6 +48,12 @@ const onSubmit = async () => {
   showNotify({ type: "success", message: "登入成功" });
   router.push("/");
 };
+
+const isLoginDisabled = ref(true);
+
+onMounted(() => {
+  getGps();
+});
 </script>
 
 <template>
@@ -50,8 +82,13 @@ const onSubmit = async () => {
         />
       </van-cell-group>
       <div class="mt-4">
-        <van-button block type="primary" native-type="submit">
-          登入
+        <van-button
+          :disabled="isLoginDisabled"
+          block
+          type="primary"
+          native-type="submit"
+        >
+          {{ isLoginDisabled ? "GPS檢驗中" : "登入" }}
         </van-button>
       </div>
     </van-form>
