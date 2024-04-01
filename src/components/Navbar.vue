@@ -17,7 +17,7 @@ watch(
 );
 </script>
 <template>
-  <van-tabbar v-model="active" class="">
+  <van-tabbar v-model="active" :placeholder="true">
     <van-tabbar-item icon="location-o" name="home" replace to="/"
       >打卡</van-tabbar-item
     >

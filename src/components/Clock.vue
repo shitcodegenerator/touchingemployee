@@ -117,7 +117,7 @@ const setGooglePosition = async (lat, lng) => {
   const myMap = new Map(googleMap.value, mapOptions);
   googleMap.value.style.width = "100%";
   googleMap.value.style.height = "240px";
-  googleMap.value.style.borderRadius = "16px";
+  googleMap.value.style.borderRadius = "8px";
 
   new AdvancedMarkerElement({
     position: mapOptions.center,
@@ -137,7 +137,7 @@ onMounted(async () => {
 <template>
   <div class="flex flex-col gap-4">
     <div
-      class="w-full m-auto p-7 mb-4 bg-white rounded-2xl shadow-lg text-black-500"
+      class="w-full m-auto p-4 mb-4 bg-white rounded-lg shadow-lg text-black-500"
     >
       <div
         ref="googleMap"
@@ -148,11 +148,14 @@ onMounted(async () => {
           }
         "
       ></div>
-      <p class="my-2 text-gray-700 text-sm text-center">{{ location }}</p>
-      <p class="font-bold text-black flex justify-center mr-3">
+      <p class="my-2 text-blue-500 text-sm text-center">
+        <van-icon name="location-o" />
+        {{ location }}
+      </p>
+      <p class="font-bold text-black flex justify-center">
         {{ currentTime.toLocaleDateString() }}
       </p>
-      <p class="font-bold text-black text-center text-5xl leading-[4rem]">
+      <p class="font-bold text-black text-center text-3xl leading-[3rem]">
         {{ currentTime.toLocaleTimeString() }}
       </p>
     </div>
