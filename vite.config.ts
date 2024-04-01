@@ -40,14 +40,14 @@ export default defineConfig({
       '@': resolve(__dirname, 'src')
     }
   },
-  // server: {
-  //   proxy: {
-  //     '/proxyApi': {
-  //       target: 'http://localhost:3006/api/',
-  //       changeOrigin: true,
-  //       secure: false,
-  //       rewrite: (path) => path.replace('/proxyApi', '')
-  //     }
-  //   }
-  // },
+  server: {
+    proxy: {
+      '/proxyApi': {
+        target: 'https://touching-employee-backend.vercel.app/api/',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace('/proxyApi', '')
+      }
+    }
+  },
 })

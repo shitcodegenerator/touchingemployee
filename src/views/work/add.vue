@@ -17,6 +17,7 @@ const showStartTimePicker = ref(false);
 const showEndTimePicker = ref(false);
 const showWorkplacePicker = ref(false);
 const startTime = ref();
+const formRef = ref();
 
 const duration = computed(() => {
   if (!startTime.value || !endTime.value) return "-";
@@ -67,14 +68,16 @@ const onSubmit = async () => {
 };
 
 const onConfirmStartTime = (value) => {
-  console.log(value);
   startTime.value = value.selectedValues;
   showStartTimePicker.value = false;
+
+  formRef.value.validate("endTime");
 };
 
 const onConfirmEndTime = (value) => {
   endTime.value = value.selectedValues;
   showEndTimePicker.value = false;
+  formRef.value.validate("startTime");
 };
 
 const onConfirmWorkplace = (value) => {
@@ -146,7 +149,7 @@ onMounted(async () => {
 
 <template>
   <div class="flex flex-col gap-4">
-    <van-form @submit="onSubmit" validate-trigger="onChange">
+    <van-form ref="formRef" @submit="onSubmit" validate-trigger="onChange">
       <van-cell-group class="mb-4">
         <van-popup v-model:show="showWorkplacePicker" round position="bottom">
           <van-picker
@@ -184,6 +187,7 @@ onMounted(async () => {
           required
           label="開始時間"
           readonly
+          name="startTime"
           clickable
           input-align="right"
           :placeholder="getTime(startTime)"
@@ -194,6 +198,19 @@ onMounted(async () => {
                 return !!startTime;
               },
               message: '請選擇開始時間',
+            },
+            {
+              trigger: 'onChange',
+              validator: () => {
+                console.log(startTime);
+                const [startHour, startMin] = startTime;
+                const [endHour, endMin] = endTime;
+
+                if (startHour > endHour) return false;
+                if (startHour === endHour && endMin < startMin) return false;
+                return true;
+              },
+              message: '開始時間不得小於結束時間',
             },
           ]"
         />
@@ -213,6 +230,7 @@ onMounted(async () => {
           label="結束時間"
           readonly
           clickable
+          name="endTime"
           class="text-main"
           input-align="right"
           :placeholder="getTime(endTime)"
@@ -224,6 +242,19 @@ onMounted(async () => {
                 return !!endTime;
               },
               message: '請選擇結束時間',
+            },
+            {
+              trigger: 'onChange',
+              validator: () => {
+                console.log(startTime);
+                const [startHour, startMin] = startTime;
+                const [endHour, endMin] = endTime;
+
+                if (startHour > endHour) return false;
+                if (startHour === endHour && endMin < startMin) return false;
+                return true;
+              },
+              message: '開始時間不得小於結束時間',
             },
           ]"
         />
