@@ -10,7 +10,7 @@ const route = useRoute();
 
 <template>
   <Navbar v-if="route.name !== 'login'" />
-  <Loading v-if="page.loading" />
+  <Loading v-show="page.loading" />
   <router-view></router-view>
 </template>
 

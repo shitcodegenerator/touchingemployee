@@ -49,6 +49,15 @@ const duration = computed(() => {
   return `${diffInMinutes}分鐘 (${diffInHours}小時)`;
 });
 
+const clearData = () => {
+  worklist.content = "";
+  worklist.workplace = "新店B單元";
+  worklist.target = "";
+  worklist.contact = "";
+  startTime.value = "";
+  endTime.value = "";
+};
+
 const onSubmit = async () => {
   // 實現提交邏輯
   const data = {
@@ -62,6 +71,7 @@ const onSubmit = async () => {
   }
 
   await addWork(data);
+  clearData();
   showNotify({ type: "success", message: "新增成功" });
   getWorkList();
   // 在這裡發送API請求到後端
