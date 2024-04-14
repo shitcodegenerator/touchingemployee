@@ -65,7 +65,7 @@ const baseURL = location.host.includes('localhost') ? '/proxyApi' : baseUrl
 /** 創建axios實例 */
 const instance = axios.create({
   timeout: 30000,
-  baseURL: baseUrl,
+  baseURL: baseURL,
   headers: {
     'Content-Type': 'application/json'
   }

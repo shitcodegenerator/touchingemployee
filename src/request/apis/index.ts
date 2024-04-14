@@ -26,6 +26,9 @@ export const addContact = (data) => {
 export const getClockinList = () => {
   return http.get('clockin')
 }
+export const getClockinListHours = () => {
+  return http.get('clockin/hours')
+}
 
 export const getWork = () => {
   return http.get('work')
