@@ -1,13 +1,15 @@
 <script lang="ts" setup>
 import { useCurrentTime } from "@/utils/useCurrentTime";
-import { showSuccessToast } from "vant";
+import { showSuccessToast, showNotify } from "vant";
 import dayjs from "dayjs";
 import { clockin } from "../request/apis/index";
 import { convertToUtc } from "../utils/timeFormat";
 import { Loader } from "@googlemaps/js-api-loader";
 import { onMounted, ref, computed } from "vue";
 import { list } from "postcss";
+import pageStore from "../store/page";
 import axios from "axios";
+const page = pageStore();
 
 const props = defineProps<{
   list: { start: string; end: string; _id: string }[];
@@ -24,8 +26,8 @@ const getGps = () => {
       async function (position) {
         const lat = position.coords.latitude;
         const lng = position.coords.longitude;
-        console.log("Latitude is :", lat);
-        console.log("Longitude is :", lng);
+        // console.log("Latitude is :", lat);
+        // console.log("Longitude is :", lng);
 
         setGooglePosition(lat, lng);
         const { data } = await axios.get(
@@ -33,12 +35,14 @@ const getGps = () => {
         );
 
         if (!data || !data.results || !data.results.length) {
-          location.value = "無法取得定位，請重新整理或聯絡網站管理員。";
+          location.value = "";
         }
         location.value = data.results[0].formatted_address ?? "";
+        page.loading = false;
       },
       function (error) {
         console.error("Error Code = " + error.code + " - " + error.message);
+        page.loading = false;
       },
       {
         enableHighAccuracy: true, // 是否要求高精度的位置資訊
@@ -48,11 +52,20 @@ const getGps = () => {
     );
   } else {
     /* 地理位置服務不可用 */
+    page.loading = false;
   }
 };
 
 const startClockIn = async () => {
   const currentTime = dayjs().format("YYYY-MM-DD HH:mm:ss");
+  if (!location.value) {
+    showNotify({
+      type: "danger",
+      message: "無法獲得當前的GPS定位，請重新整理，並聯繫董小姐。",
+    });
+    return;
+  }
+
   await clockin({
     start: convertToUtc(currentTime),
     end: "",
@@ -70,6 +83,13 @@ const startClockIn = async () => {
   emit("success");
 };
 const endClockIn = async () => {
+  if (!location.value) {
+    showNotify({
+      type: "danger",
+      message: "無法獲得當前的GPS定位，請重新整理，並聯繫董小姐。",
+    });
+    return;
+  }
   const currentTime = dayjs().format("YYYY-MM-DD HH:mm:ss");
   await clockin({
     start: "",
@@ -130,8 +150,10 @@ const lastTypeClockIn = computed(() => {
   if (!props.list || !props.list.length) return false;
   return !!props.list[0].start;
 });
+
 onMounted(async () => {
-  getGps();
+  page.loading = true;
+  await getGps();
 });
 </script>
 <template>

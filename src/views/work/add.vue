@@ -5,6 +5,7 @@ import { addWork, getWork, getContact } from "../../request/apis/index";
 import dayjs from "dayjs";
 import { workplaceOptions } from "../../config";
 import { showNotify } from "vant";
+import { useUserStore } from "../../store/user";
 
 const worklist = reactive({
   content: "",
@@ -18,6 +19,7 @@ const showEndTimePicker = ref(false);
 const showWorkplacePicker = ref(false);
 const startTime = ref();
 const formRef = ref();
+const userStore = useUserStore();
 
 const duration = computed(() => {
   if (!startTime.value || !endTime.value) return "-";
@@ -154,6 +156,7 @@ const clearContact = () => {
 onMounted(async () => {
   await getWorkList();
   getContactList();
+  worklist.workplace = userStore.data.workplace || "新店B單元";
 });
 </script>
 
