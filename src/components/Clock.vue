@@ -17,7 +17,7 @@ const props = defineProps<{
 
 const emit = defineEmits(["success"]);
 const { currentTime } = useCurrentTime();
-const apiKey = ref("AIzaSyAE-oU3Zz7bZPkRIfbvSatriNHZ5OKFZMY");
+const apiKey = ref("AIzaSyCSSU0_Mf_14700irQVfZo3eTESzlm2AVo");
 const location = ref("");
 
 const getGps = () => {
@@ -33,10 +33,12 @@ const getGps = () => {
         const { data } = await axios.get(
           `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey.value}`
         );
+        console.info(data);
 
         if (!data || !data.results || !data.results.length) {
           location.value = "";
         }
+        console.log("data.results[0]", data.results[0]);
         location.value = data.results[0].formatted_address ?? "";
         page.loading = false;
       },

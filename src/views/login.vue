@@ -18,6 +18,7 @@ const getGps = () => {
         isLoginDisabled.value = false;
       },
       function (error) {
+        console.log(error);
         isLoginDisabled.value = true;
         showNotify({
           type: "danger",
@@ -26,7 +27,7 @@ const getGps = () => {
       },
       {
         enableHighAccuracy: true, // 是否要求高精度的位置資訊
-        timeout: 5000, // 等待位置資訊的最長時間
+        timeout: 10000, // 等待位置資訊的最長時間
         maximumAge: 0, // 定位資訊的有效期
       }
     );
