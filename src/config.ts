@@ -1,4 +1,5 @@
 export const workplaceOptions = [
+    { text: "新店明德", value: "新店明德" },
     { text: "新店B單元", value: "新店B單元" },
     { text: "泰山楓江", value: "泰山楓江" },
     { text: "新莊知識", value: "新莊知識" },
