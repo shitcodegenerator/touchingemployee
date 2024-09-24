@@ -5,36 +5,33 @@ import { useUserStore } from "../store/user";
 import { useRouter } from "vue-router";
 import { showNotify } from "vant";
 import logo from "@/assets/logo.png";
+import axios from "axios";
 
 const username = ref("");
 const password = ref("");
 const user = useUserStore();
 const router = useRouter();
 
-const getGps = () => {
-  if ("geolocation" in navigator) {
-    navigator.geolocation.getCurrentPosition(
-      async function (position) {
-        isLoginDisabled.value = false;
-      },
-      function (error) {
-        console.log(error);
-        isLoginDisabled.value = true;
-        showNotify({
-          type: "danger",
-          message: "請啟用GPS再重新整理網頁登入＿",
-        });
-      },
-      {
-        enableHighAccuracy: true, // 是否要求高精度的位置資訊
-        timeout: 10000, // 等待位置資訊的最長時間
-        maximumAge: 0, // 定位資訊的有效期
-      }
+const apiKey = "AIzaSyBytmX_W9NAAa50Y1Rk-3rbD3557wstnCs"; // 替換成你的Google Maps API金鑰
+
+// 使用Google Maps Geolocation API
+const getGps = async () => {
+  try {
+    const response = await axios.post(
+      `https://www.googleapis.com/geolocation/v1/geolocate?key=${apiKey}`
     );
-  } else {
-    /* 地理位置服務不可用 */
+    const location = response.data.location;
+    const lat = location.lat;
+    const lng = location.lng;
+    console.log(`Latitude: ${lat}, Longitude: ${lng}`);
+    isLoginDisabled.value = false;
+  } catch (error) {
+    console.error(error);
     isLoginDisabled.value = true;
-    showNotify({ type: "danger", message: "請啟用GPS再重新整理網頁登入" });
+    showNotify({
+      type: "danger",
+      message: "無法取得GPS定位，請檢查您的連接並重試。",
+    });
   }
 };
 
