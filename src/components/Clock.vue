@@ -8,6 +8,7 @@ import { Loader } from "@googlemaps/js-api-loader";
 import { onMounted, ref, computed } from "vue";
 import pageStore from "../store/page";
 import axios from "axios";
+
 const page = pageStore();
 
 const props = defineProps<{
@@ -16,43 +17,71 @@ const props = defineProps<{
 
 const emit = defineEmits(["success"]);
 const { currentTime } = useCurrentTime();
-const apiKey = ref("AIzaSyBytmX_W9NAAa50Y1Rk-3rbD3557wstnCs"); // 请替换为您的Google Maps API金鑰
 const location = ref("");
+const latLng = ref<{ lat: number; lng: number } | null>(null);
 
-// 使用Google Geolocation API來取得GPS位置
+const googleMap = ref();
+const apiKey = "AIzaSyBytmX_W9NAAa50Y1Rk-3rbD3557wstnCs"; // 替換成你的Google Maps API金鑰
+
+// 使用 HTML5 Geolocation API 獲取位置信息
 const getGps = async () => {
-  try {
-    const response = await axios.post(
-      `https://www.googleapis.com/geolocation/v1/geolocate?key=${apiKey.value}`
-    );
-    const { lat, lng } = response.data.location;
-
-    setGooglePosition(lat, lng);
-
-    const geocodeResponse = await axios.get(
-      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyCSSU0_Mf_14700irQVfZo3eTESzlm2AVo`
-    );
-    if (geocodeResponse.data.results && geocodeResponse.data.results.length > 0) {
-      location.value = geocodeResponse.data.results[0].formatted_address;
-    } else {
-      location.value = "無法取得地址";
-    }
-
-    page.loading = false;
-  } catch (error) {
-    console.error("GPS取得失敗", error);
+  if (!navigator.geolocation) {
     showNotify({
       type: "danger",
-      message: "無法取得GPS定位，請檢查網絡連接並重試。",
+      message: "瀏覽器不支援定位功能。",
     });
     page.loading = false;
+    return;
   }
+
+  navigator.geolocation.getCurrentPosition(
+    async (position) => {
+      const { latitude, longitude } = position.coords;
+      console.log("Latitude:", latitude, "Longitude:", longitude);
+
+      latLng.value = { lat: latitude, lng: longitude };
+      setGooglePosition(latitude, longitude);
+
+      // 使用 Google Maps Geocoding API 獲取地址
+      try {
+        const geocodeResponse = await axios.get(
+          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`
+        );
+        if (
+          geocodeResponse.data.results &&
+          geocodeResponse.data.results.length > 0
+        ) {
+          location.value = geocodeResponse.data.results[0].formatted_address;
+        } else {
+          location.value = "無法取得地址";
+        }
+      } catch (error) {
+        console.error("反向地理編碼失敗", error);
+        location.value = "無法取得地址";
+      }
+
+      page.loading = false;
+    },
+    (error) => {
+      console.error("GPS取得失敗", error.message);
+      showNotify({
+        type: "danger",
+        message: "無法獲取位置信息，請檢查權限或網絡連接。",
+      });
+      page.loading = false;
+    },
+    {
+      enableHighAccuracy: true, // 啟用高精度
+      timeout: 10000, // 最長等待時間
+      maximumAge: 0, // 不使用緩存
+    }
+  );
 };
 
-// 設定 Google 地圖
-const setGooglePosition = async (lat, lng) => {
+// 設置 Google 地圖
+const setGooglePosition = async (lat: number, lng: number) => {
   const loader = new Loader({
-    apiKey: apiKey.value,
+    apiKey,
     version: "weekly",
     libraries: ["places"],
   });
@@ -133,8 +162,6 @@ const endClockIn = async () => {
   emit("success");
 };
 
-const googleMap = ref();
-
 const lastTypeClockIn = computed(() => {
   if (!props.list || !props.list.length) return false;
   return !!props.list[0].start;
@@ -151,11 +178,7 @@ onMounted(async () => {
     <div
       class="w-full m-auto p-4 mb-4 bg-white rounded-lg shadow-lg text-black-500"
     >
-      <div
-        ref="googleMap"
-        class="google-map"
-        style="height: 300px;"
-      ></div>
+      <div ref="googleMap" class="google-map" style="height: 300px"></div>
       <p class="my-2 text-blue-500 text-sm text-center">
         <van-icon name="location-o" />
         {{ location }}
@@ -188,4 +211,4 @@ onMounted(async () => {
       >下班打卡</van-button
     >
   </div>
-</template
+</template>
